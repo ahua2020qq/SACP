@@ -1,0 +1,18 @@
+{
+  "type": "task",
+  "title": "完成SACP协议文档",
+  "create_time": "2026-02-20 14:30:00",
+  "update_time": "2026-02-20 14:30:00",
+  "creator": "jorneyruan",
+  "source": "ClawSync",
+  "extend": {
+    "project": "开源发布",
+    "assignee": "alice"
+  },
+  "description": "撰写SACP V1.0规范并发布到GitHub",
+  "priority": "高",
+  "status": "todo",
+  "progress": 0,
+  "from_command": "AI创建任务",
+  "output_expect": "GitHub仓库地址"
+}
