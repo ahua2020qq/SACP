@@ -35,7 +35,7 @@
 
 ### 快速开始
 
-1. 阅读[协议规范](./docs/sacp-v1.0.md)了解数据模型。
+1. 阅读[协议规范（中文版）](./docs/sacp-v1.0.zh.md)或[English Specification](./docs/sacp-v1.0.en.md)了解数据模型。
 2. 参考[API文档](./docs/api-reference.md)对接系统。
 3. 查看[示例代码](./docs/examples/)快速上手。
 4. 使用官方SDK（[Python](./sdk/python/sacp_client.py)）简化接入。
@@ -80,7 +80,7 @@ AI-generated content (tasks, reports, approvals, etc.) is currently scattered ac
 
 ### Quick Start
 
-1. Read the [protocol specification](./docs/sacp-v1.0.md) to understand data models.
+1. Read the [protocol specification (English)](./docs/sacp-v1.0.en.md) or [中文版](./docs/sacp-v1.0.zh.md) to understand data models.
 2. Reference the [API documentation](./docs/api-reference.md) for system integration.
 3. Check [example code](./docs/examples/) for quick start.
 4. Use the official SDK ([Python](./sdk/python/sacp_client.py)) to simplify integration.
