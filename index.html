@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACP - Structured AI Collaboration Protocol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #FF6B35;
+            --primary-blue: #00D9FF;
+            --accent-pink: #FF4D9C;
+            --accent-green: #7CFF6B;
+            --accent-yellow: #FFD93D;
+            --dark-bg: #1A1A2E;
+            --card-bg: #16213E;
+            --text-light: #F7F7F7;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 10px 15px;
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .language-selector select {
+            background: transparent;
+            color: var(--text-light);
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 5px;
+            outline: none;
+        }
+
+        .language-selector select option {
+            background: var(--card-bg);
+            color: var(--text-light);
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--accent-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: bounceIn 1s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hero .tagline {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            max-width: 800px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            animation: slideUp 1s ease-out 0.6s both;
+        }
+
+        /* Bridge Animation */
+        .bridge-animation {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 300px;
+            margin: 3rem auto;
+            animation: slideUp 1s ease-out 0.9s both;
+        }
+
+        .system {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .system:hover {
+            transform: scale(1.1);
+        }
+
+        .system.ai {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary-orange), var(--accent-pink));
+        }
+
+        .system.sacp {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3); }
+            50% { box-shadow: 0 10px 50px rgba(0, 217, 255, 0.6); }
+        }
+
+        .system.oa {
+            right: 0;
+            top: 30%;
+            background: linear-gradient(135deg, var(--accent-yellow), var(--primary-orange));
+        }
+
+        .system.erp {
+            right: 0;
+            bottom: 30%;
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-blue));
+        }
+
+        .system-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Data flow particles */
+        .data-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-yellow);
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: flowRight 3s infinite;
+        }
+
+        @keyframes flowRight {
+            0% { left: 150px; top: 50%; opacity: 0; }
+            10% { opacity: 0.8; }
+            45% { left: calc(50% - 10px); top: 50%; }
+            55% { left: calc(50% + 10px); top: 50%; }
+            90% { opacity: 0.8; }
+            100% { left: calc(100% - 150px); top: 30%; opacity: 0; }
+        }
+
+        .data-particle:nth-child(2) {
+            animation-delay: 1s;
+            background: var(--accent-pink);
+        }
+
+        .data-particle:nth-child(2) {
+            animation-name: flowRightBottom;
+        }
+
+        @keyframes flowRightBottom {
+            0% { left: 150px; top: 50%; opacity: 0; }
+            10% { opacity: 0.8; }
+            45% { left: calc(50% - 10px); top: 50%; }
+            55% { left: calc(50% + 10px); top: 50%; }
+            90% { opacity: 0.8; }
+            100% { left: calc(100% - 150px); top: 70%; opacity: 0; }
+        }
+
+        /* Data Structures Section */
+        .structures-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--accent-yellow);
+        }
+
+        .structures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .structure-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .structure-card:nth-child(1) { animation-delay: 0.1s; }
+        .structure-card:nth-child(2) { animation-delay: 0.2s; }
+        .structure-card:nth-child(3) { animation-delay: 0.3s; }
+        .structure-card:nth-child(4) { animation-delay: 0.4s; }
+        .structure-card:nth-child(5) { animation-delay: 0.5s; }
+        .structure-card:nth-child(6) { animation-delay: 0.6s; }
+        .structure-card:nth-child(7) { animation-delay: 0.7s; }
+        .structure-card:nth-child(8) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .structure-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary-blue);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.2);
+        }
+
+        .structure-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .structure-card:hover .structure-icon {
+            animation: spin 0.6s ease-in-out;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+
+        .structure-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-orange);
+        }
+
+        .structure-type {
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .structure-desc {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #B0B0B0;
+        }
+
+        /* Different colors for each card */
+        .structure-card:nth-child(1) { --card-accent: var(--primary-orange); }
+        .structure-card:nth-child(2) { --card-accent: var(--primary-blue); }
+        .structure-card:nth-child(3) { --card-accent: var(--accent-pink); }
+        .structure-card:nth-child(4) { --card-accent: var(--accent-green); }
+        .structure-card:nth-child(5) { --card-accent: var(--accent-yellow); }
+        .structure-card:nth-child(6) { --card-accent: var(--primary-orange); }
+        .structure-card:nth-child(7) { --card-accent: var(--accent-pink); }
+
+        /* Value Proposition */
+        .value-section {
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(255, 107, 53, 0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid var(--primary-orange);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary-orange) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .value-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-yellow);
+        }
+
+        .value-desc {
+            font-size: 1rem;
+            color: #B0B0B0;
+            line-height: 1.6;
+        }
+
+        /* Protocol Documentation Button */
+        .doc-button {
+            display: block;
+            margin: 3rem auto;
+            padding: 1.5rem 3rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            color: var(--dark-bg);
+            text-decoration: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .doc-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.6);
+        }
+
+        .doc-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+            border-top: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .footer h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-orange);
+        }
+
+        .footer p {
+            color: #B0B0B0;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .language-selector {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+
+            .language-selector select {
+                font-size: 0.9rem;
+            }
+
+            .bridge-animation {
+                height: 500px;
+            }
+
+            .system {
+                width: 100px;
+                height: 100px;
+                font-size: 0.9rem;
+            }
+
+            .system.ai {
+                left: 50%;
+                top: 10%;
+                transform: translateX(-50%);
+            }
+
+            .system.sacp {
+                left: 50%;
+                top: 45%;
+                transform: translate(-50%, -50%);
+            }
+
+            .system.oa {
+                right: 50%;
+                top: 80%;
+                transform: translateX(50%);
+            }
+
+            .system.erp {
+                right: 10%;
+                top: 80%;
+                display: none;
+            }
+
+            .data-particle {
+                display: none;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-right: 3px solid var(--primary-blue);
+            border-bottom: 3px solid var(--primary-blue);
+            transform: rotate(45deg);
+            animation: scrollArrow 2s infinite;
+        }
+
+        @keyframes scrollArrow {
+            0%, 20% { transform: rotate(45deg) translate(0, 0); opacity: 0; }
+            40% { opacity: 1; }
+            80% { transform: rotate(45deg) translate(10px, 10px); opacity: 1; }
+            100% { transform: rotate(45deg) translate(10px, 10px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">🇬🇧 English</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="ko">🇰🇷 한국어</option>
+            <option value="ru">🇷🇺 Русский</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="pt">🇵🇹 Português</option>
+        </select>
+    </div>
+
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 data-i18n="title">SACP</h1>
+        <p class="subtitle" data-i18n="subtitle">Structured AI Collaboration Protocol</p>
+        <p class="tagline" data-i18n="tagline">
+            Standardized data models for AI-driven cross-system collaboration<br>
+            Making AI output orderly, making systems seamlessly connected 🚀
+        </p>
+
+        <!-- Bridge Animation -->
+        <div class="bridge-animation">
+            <div class="system ai">
+                <div class="system-icon">🤖</div>
+                <div data-i18n="aiSystem">AI System</div>
+            </div>
+            <div class="system sacp">
+                <div class="system-icon">🌉</div>
+                <div>SACP</div>
+            </div>
+            <div class="system oa">
+                <div class="system-icon">🏢</div>
+                <div data-i18n="oaSystem">OA System</div>
+            </div>
+            <div class="system erp">
+                <div class="system-icon">📊</div>
+                <div data-i18n="erpSystem">ERP System</div>
+            </div>
+            <div class="data-particle"></div>
+            <div class="data-particle"></div>
+        </div>
+
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- 7 Data Structures -->
+    <section class="structures-section">
+        <h2 class="section-title" data-i18n="structuresTitle">8 Core Data Structures ✨</h2>
+        <div class="structures-grid">
+            <div class="structure-card">
+                <div class="structure-icon">📋</div>
+                <div class="structure-type">task</div>
+                <div class="structure-name" data-i18n="taskName">Task Execution</div>
+                <div class="structure-desc" data-i18n="taskDesc">Tasks, todos, development work with priority, status tracking</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">📄</div>
+                <div class="structure-type">report</div>
+                <div class="structure-name" data-i18n="reportName">Document Report</div>
+                <div class="structure-desc" data-i18n="reportDesc">Analysis reports, proposals, documentation in Markdown format</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">📦</div>
+                <div class="structure-type">output</div>
+                <div class="structure-name" data-i18n="outputName">Output Delivery</div>
+                <div class="structure-desc" data-i18n="outputDesc">Code, files, images, links and other deliverables</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">💬</div>
+                <div class="structure-type">message</div>
+                <div class="structure-name" data-i18n="messageName">Notification Message</div>
+                <div class="structure-desc" data-i18n="messageDesc">Short notifications, status alerts for quick communication</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">✅</div>
+                <div class="structure-type">approval</div>
+                <div class="structure-name" data-i18n="approvalName">Approval Process</div>
+                <div class="structure-desc" data-i18n="approvalDesc">Expense reports, leave requests, contracts with multi-level approval</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">📅</div>
+                <div class="structure-type">schedule</div>
+                <div class="structure-name" data-i18n="scheduleName">Schedule Management</div>
+                <div class="structure-desc" data-i18n="scheduleDesc">Meeting arrangements, calendar events, time reminders</div>
+            </div>
+
+            <div class="structure-card">
+                <div class="structure-icon">📈</div>
+                <div class="structure-type">metric</div>
+                <div class="structure-name" data-i18n="metricName">Metric Data</div>
+                <div class="structure-desc" data-i18n="metricDesc">Quantitative metrics, statistics, performance monitoring data</div>
+            </div>
+
+            <div class="structure-card" style="border: 3px solid var(--accent-pink);">
+                <div class="structure-icon">🔄</div>
+                <div class="structure-type">workflow</div>
+                <div class="structure-name" data-i18n="workflowName">Workflow Orchestration</div>
+                <div class="structure-desc" data-i18n="workflowDesc">Business process automation with dependencies, triggers, and monitoring</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="value-section">
+        <h2 class="section-title" data-i18n="valueTitle">Core Values 💎</h2>
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-icon">🔗</div>
+                <div class="value-title" data-i18n="value1Title">Break Data Silos</div>
+                <div class="value-desc" data-i18n="value1Desc">Unified formats for tasks, reports, approvals enable seamless OA, ERP, AI tool collaboration</div>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">🧠</div>
+                <div class="value-title" data-i18n="value2Title">AI-Native Design</div>
+                <div class="value-desc" data-i18n="value2Desc">From data structures to interaction patterns, fully adapted for AI-driven scenarios</div>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">🔒</div>
+                <div class="value-title" data-i18n="value3Title">Security Built-in</div>
+                <div class="value-desc" data-i18n="value3Desc">Signature verification, data isolation, mandatory HTTPS - enterprise-grade security</div>
+            </div>
+
+            <div class="value-card">
+                <div class="value-icon">🎯</div>
+                <div class="value-title" data-i18n="value4Title">Easy Integration</div>
+                <div class="value-desc" data-i18n="value4Desc">RESTful API + Webhook, multi-language SDK, minimal development cost</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protocol Documentation Button -->
+    <button class="doc-button" id="docButton" onclick="window.open('spec.html', '_blank')">
+        📖 <span data-i18n="viewSpec">View Protocol Specification</span>
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3 data-i18n="footerTitle">SACP - Structured AI Collaboration Protocol</h3>
+        <p data-i18n="version">Version: v1.1 | Release: 2026-03-20</p>
+        <p data-i18n="author">Author: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a></p>
+        <p data-i18n="license">License: CC BY 4.0 | Free to share and adapt with attribution</p>
+        <p style="margin-top: 1rem; color: var(--primary-blue);" data-i18n="footerTagline">🌟 Making AI output orderly, making systems seamlessly connected</p>
+    </footer>
+
+    <script>
+        // Translations
+        const translations = {
+            en: {
+                title: "SACP",
+                subtitle: "Structured AI Collaboration Protocol",
+                tagline: "Standardized data models for AI-driven cross-system collaboration<br>Making AI output orderly, making systems seamlessly connected 🚀",
+                aiSystem: "AI System",
+                oaSystem: "OA System",
+                erpSystem: "ERP System",
+                structuresTitle: "8 Core Data Structures ✨",
+                taskName: "Task Execution",
+                taskDesc: "Tasks, todos, development work with priority, status tracking",
+                reportName: "Document Report",
+                reportDesc: "Analysis reports, proposals, documentation in Markdown format",
+                outputName: "Output Delivery",
+                outputDesc: "Code, files, images, links and other deliverables",
+                messageName: "Notification Message",
+                messageDesc: "Short notifications, status alerts for quick communication",
+                approvalName: "Approval Process",
+                approvalDesc: "Expense reports, leave requests, contracts with multi-level approval",
+                scheduleName: "Schedule Management",
+                scheduleDesc: "Meeting arrangements, calendar events, time reminders",
+                metricName: "Metric Data",
+                metricDesc: "Quantitative metrics, statistics, performance monitoring data",
+                workflowName: "Workflow Orchestration",
+                workflowDesc: "Business process automation with dependencies, triggers, and monitoring",
+                valueTitle: "Core Values 💎",
+                value1Title: "Break Data Silos",
+                value1Desc: "Unified formats for tasks, reports, approvals enable seamless OA, ERP, AI tool collaboration",
+                value2Title: "AI-Native Design",
+                value2Desc: "From data structures to interaction patterns, fully adapted for AI-driven scenarios",
+                value3Title: "Security Built-in",
+                value3Desc: "Signature verification, data isolation, mandatory HTTPS - enterprise-grade security",
+                value4Title: "Easy Integration",
+                value4Desc: "RESTful API + Webhook, multi-language SDK, minimal development cost",
+                viewSpec: "View Protocol Specification",
+                footerTitle: "SACP - Structured AI Collaboration Protocol",
+                version: "Version: v1.1 | Release: 2026-03-20",
+                author: 'Author: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "License: CC BY 4.0 | Free to share and adapt with attribution",
+                footerTagline: "🌟 Making AI output orderly, making systems seamlessly connected"
+            },
+            zh: {
+                title: "SACP",
+                subtitle: "结构化AI协同协议",
+                tagline: "为AI驱动的跨系统协作提供标准化数据模型<br>让AI输出有序，让系统互通无界 🚀",
+                aiSystem: "AI系统",
+                oaSystem: "OA系统",
+                erpSystem: "ERP系统",
+                structuresTitle: "8种核心数据结构 ✨",
+                taskName: "任务执行",
+                taskDesc: "需要执行的任务、待办事项、开发任务等，包含优先级、状态和进度跟踪",
+                reportName: "文档报告",
+                reportDesc: "分析报告、方案文档、总结、知识沉淀等，以Markdown格式承载完整内容",
+                outputName: "成果交付",
+                outputDesc: "代码、文件、图片、链接等交付物，支持多种类别的成果类型",
+                messageName: "通知消息",
+                messageDesc: "简短通知、状态提醒等快速消息，不承载核心业务数据",
+                approvalName: "审批流程",
+                approvalDesc: "各类审批申请（报销、请假、合同等），支持多级审批流程",
+                scheduleName: "日程管理",
+                scheduleDesc: "会议安排、日程计划、时间提醒等时间相关的事件管理",
+                metricName: "指标数据",
+                metricDesc: "量化指标、统计数据、性能监测等数值型数据的标准化表示",
+                workflowName: "工作流编排",
+                workflowDesc: "业务流程自动化，支持依赖关系、触发条件和监控",
+                valueTitle: "核心价值 💎",
+                value1Title: "打破数据孤岛",
+                value1Desc: "统一的任务、报告、审批等格式，让OA、ERP、AI工具无缝协作",
+                value2Title: "AI原生设计",
+                value2Desc: "从数据结构到交互模式，全面适配AI驱动的协作场景",
+                value3Title: "安全内置",
+                value3Desc: "签名校验、数据隔离、HTTPS强制，企业级安全基线",
+                value4Title: "极简接入",
+                value4Desc: "RESTful API + Webhook，多语言SDK，最低开发成本",
+                viewSpec: "查看协议规范",
+                footerTitle: "SACP - 结构化AI协同协议",
+                version: "版本：v1.1 | 发布日期：2026-03-20",
+                author: '作者：山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "开源协议：CC BY 4.0 | 可自由分享、演绎，但需保留署名",
+                footerTagline: "🌟 让AI输出有序，让系统互通无界"
+            },
+            de: {
+                title: "SACP",
+                subtitle: "Strukturierte AI-Kollaborationsprotokoll",
+                tagline: "Standardisierte Datenmodelle für KI-gesteuerte systemübergreifende Zusammenarbeit<br>KI-Ausgabe ordnen, Systeme nahtlos verbinden 🚀",
+                aiSystem: "KI-System",
+                oaSystem: "OA-System",
+                erpSystem: "ERP-System",
+                structuresTitle: "7 Kern Datenstrukturen ✨",
+                taskName: "Aufgabenausführung",
+                taskDesc: "Aufgaben, To-dos, Entwicklungsarbeit mit Priorität und Statusverfolgung",
+                reportName: "Dokumentenbericht",
+                reportDesc: "Analyseberichte, Vorschläge, Dokumentation im Markdown-Format",
+                outputName: "Ausgabelieferung",
+                outputDesc: "Code, Dateien, Bilder, Links und andere Deliverables",
+                messageName: "Benachrichtigungsnachricht",
+                messageDesc: "Kurze Benachrichtigungen, Statusalarme für schnelle Kommunikation",
+                approvalName: "Genehmigungsprozess",
+                approvalDesc: "Spesenberichte, Urlaubsanträge, Verträge mit mehrstufiger Genehmigung",
+                scheduleName: "Terminplanung",
+                scheduleDesc: "Meetingvereinbarungen, Kalenderereignisse, Zeiterinnerungen",
+                metricName: "Kennzahlendaten",
+                metricDesc: "Quantitative Kennzahlen, Statistiken, Leistungsüberwachungsdaten",
+                valueTitle: "Kernwerte 💎",
+                value1Title: "Datensilos aufbrechen",
+                value1Desc: "Einheitliche Formate für Aufgaben, Berichte, Genehmigungen ermöglichen nahtlose OA-, ERP-, KI-Tool-Zusammenarbeit",
+                value2Title: "KI-native Design",
+                value2Desc: "Von Datenstrukturen bis zu Interaktionsmustern, vollständig an KI-gesteuerte Szenarien angepasst",
+                value3Title: "Sicherheit eingebaut",
+                value3Desc: "Signaturverifikation, Datenisolierung, obligatorisches HTTPS - entreprise-grade Sicherheit",
+                value4Title: "Einfache Integration",
+                value4Desc: "RESTful API + Webhook, mehrsprachiges SDK, minimale Entwicklungskosten",
+                viewSpec: "Protokollspezifikation anzeigen",
+                footerTitle: "SACP - Strukturierte AI-Kollaborationsprotokoll",
+                version: "Version: v1.0 | Freigabe: 2026-02-20",
+                author: 'Autor: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "Lizenz: CC BY 4.0 | Frei zu teilen und anzupassen mit Namensnennung",
+                footerTagline: "🌟 KI-Ausgabe ordnen, Systeme nahtlos verbinden"
+            },
+            fr: {
+                title: "SACP",
+                subtitle: "Protocole de Collaboration IA Structurée",
+                tagline: "Modèles de données standardisés pour la collaboration inter-systèmes pilotée par l'IA<br>Rendre la sortie IA ordonnée, rendre les systèmes connectés de manière transparente 🚀",
+                aiSystem: "Système IA",
+                oaSystem: "Système OA",
+                erpSystem: "Système ERP",
+                structuresTitle: "7 Structures de Données Principales ✨",
+                taskName: "Exécution de Tâches",
+                taskDesc: "Tâches, todos, travail de développement avec priorité et suivi de statut",
+                reportName: "Rapport de Document",
+                reportDesc: "Rapports d'analyse, propositions, documentation au format Markdown",
+                outputName: "Livraison de Sortie",
+                outputDesc: "Code, fichiers, images, liens et autres livrables",
+                messageName: "Message de Notification",
+                messageDesc: "Courtes notifications, alertes de statut pour communication rapide",
+                approvalName: "Processus d'Approbation",
+                approvalDesc: "Rapports de frais, demandes de congé, contrats avec approbation multi-niveaux",
+                scheduleName: "Gestion de Calendrier",
+                scheduleDesc: "Arrangements de réunion, événements de calendrier, rappels de temps",
+                metricName: "Données de Métrique",
+                metricDesc: "Métriques quantitatives, statistiques, données de surveillance des performances",
+                valueTitle: "Valeurs Principales 💎",
+                value1Title: "Briser les Silos de Données",
+                value1Desc: "Formats unifiés pour tâches, rapports, approbations permettent une collaboration transparente OA, ERP, outils IA",
+                value2Title: "Conception IA-Native",
+                value2Desc: "Des structures de données aux modèles d'interaction, entièrement adapté aux scénarios pilotés par l'IA",
+                value3Title: "Sécurité Intégrée",
+                value3Desc: "Vérification de signature, isolement des données, HTTPS obligatoire - sécurité de niveau entreprise",
+                value4Title: "Intégration Facile",
+                value4Desc: "API RESTful + Webhook, SDK multi-langage, coût de développement minimal",
+                viewSpec: "Voir la Spécification du Protocole",
+                footerTitle: "SACP - Protocole de Collaboration IA Structurée",
+                version: "Version: v1.0 | Publication: 2026-02-20",
+                author: 'Auteur: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "Licence: CC BY 4.0 | Libre de partager et d'adapter avec attribution",
+                footerTagline: "🌟 Rendre la sortie IA ordonnée, rendre les systèmes connectés de manière transparente"
+            },
+            ja: {
+                title: "SACP",
+                subtitle: "構造化AI協働プロトコル",
+                tagline: "AI駆動のクロスシステム協働のための標準化データモデル<br>AIの出力を秩序化し、システムをシームレスに接続 🚀",
+                aiSystem: "AIシステム",
+                oaSystem: "OAシステム",
+                erpSystem: "ERPシステム",
+                structuresTitle: "7つのコアデータ構造 ✨",
+                taskName: "タスク実行",
+                taskDesc: "優先度、ステータス追跡付きのタスク、ToDo、開発作業",
+                reportName: "ドキュメントレポート",
+                reportDesc: "Markdown形式の分析レポート、提案書、ドキュメント",
+                outputName: "アウトプット配信",
+                outputDesc: "コード、ファイル、画像、リンク、その他の成果物",
+                messageName: "通知メッセージ",
+                messageDesc: "短い通知、ステータスアラートによる迅速なコミュニケーション",
+                approvalName: "承認プロセス",
+                approvalDesc: "経費報告書、休暇申請、マルチレベル承認付き契約",
+                scheduleName: "スケジュール管理",
+                scheduleDesc: "会議手配、カレンダーイベント、時間リマインダー",
+                metricName: "メトリックデータ",
+                metricDesc: "定量的指標、統計、パフォーマンス監視データ",
+                valueTitle: "コア価値 💎",
+                value1Title: "データサイロを打破",
+                value1Desc: "タスク、レポート、承認の統一フォーマットでOA、ERP、AIツールのシームレスな協働を実現",
+                value2Title: "AIネイティブ設計",
+                value2Desc: "データ構造から対話パターンまで、AI駆動シナリオに完全適応",
+                value3Title: "セキュリティ内蔵",
+                value3Desc: "署名検証、データ分離、HTTPS必須 - エンタープライズグレードのセキュリティ",
+                value4Title: "簡単統合",
+                value4Desc: "RESTful API + Webhook、マルチ言語SDK、最小開発コスト",
+                viewSpec: "プロトコル仕様を表示",
+                footerTitle: "SACP - 構造化AI協働プロトコル",
+                version: "バージョン: v1.0 | リリース: 2026-02-20",
+                author: '著者: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "ライセンス: CC BY 4.0 | 帰属あれば自由に共有・改编可能",
+                footerTagline: "🌟 AIの出力を秩序化し、システムをシームレスに接続"
+            },
+            ko: {
+                title: "SACP",
+                subtitle: "구조화된 AI 협업 프로토콜",
+                tagline: "AI 기반 시스템 간 협업을 위한 표준화된 데이터 모델<br>AI 출력을 정리하고 시스템을 원활하게 연결 🚀",
+                aiSystem: "AI 시스템",
+                oaSystem: "OA 시스템",
+                erpSystem: "ERP 시스템",
+                structuresTitle: "7개 핵심 데이터 구조 ✨",
+                taskName: "작업 실행",
+                taskDesc: "우선순위, 상태 추적이 포함된 작업, 할 일, 개발 작업",
+                reportName: "문서 보고서",
+                reportDesc: "Markdown 형식의 분석 보고서, 제안서, 문서화",
+                outputName: "출력 전달",
+                outputDesc: "코드, 파일, 이미지, 링크 및 기타 산출물",
+                messageName: "알림 메시지",
+                messageDesc: "빠른 커뮤니케이션을 위한 짧은 알림, 상태 알림",
+                approvalName: "승인 프로세스",
+                approvalDesc: "다단계 승인이 포함된 비용 보고서, 휴가 요청, 계약",
+                scheduleName: "일정 관리",
+                scheduleDesc: "미팅 준비, 캘린더 이벤트, 시간 알림",
+                metricName: "메트릭 데이터",
+                metricDesc: "정량적 메트릭, 통계, 성능 모니터링 데이터",
+                valueTitle: "핵심 가치 💎",
+                value1Title: "데이터 실로 제거",
+                value1Desc: "작업, 보고서, 승인의 통합 형식으로 OA, ERP, AI 도구의 원활한 협업 가능",
+                value2Title: "AI 네이티브 설계",
+                value2Desc: "데이터 구조부터 상호 작용 패턴까지 AI 기반 시나리오에 완전히 적응",
+                value3Title: "보안 내장",
+                value3Desc: "서명 검증, 데이터 격리, 필수 HTTPS - 기업급 보안",
+                value4Title: "쉬운 통합",
+                value4Desc: "RESTful API + Webhook, 다국어 SDK, 최소 개발 비용",
+                viewSpec: "프로토콜 사양 보기",
+                footerTitle: "SACP - 구조화된 AI 협업 프로토콜",
+                version: "버전: v1.0 | 릴리스: 2026-02-20",
+                author: '저자: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "라이선스: CC BY 4.0 | 저작자 표시로 자유롭게 공유 및 수정 가능",
+                footerTagline: "🌟 AI 출력을 정리하고 시스템을 원활하게 연결"
+            },
+            ru: {
+                title: "SACP",
+                subtitle: "Структурированный Протокол AI Сотрудничества",
+                tagline: "Стандартизированные модели данных для взаимодействия между системами на базе ИИ<br>Делаем вывод ИИ упорядоченным, системы связанными бесшовно 🚀",
+                aiSystem: "ИИ система",
+                oaSystem: "OA система",
+                erpSystem: "ERP система",
+                structuresTitle: "7 Основных Структур Данных ✨",
+                taskName: "Выполнение Задач",
+                taskDesc: "Задачи, списки дел, разработка с приоритетом и отслеживанием статуса",
+                reportName: "Документ Отчет",
+                reportDesc: "Аналитические отчеты, предложения, документация в формате Markdown",
+                outputName: "Доставка Вывода",
+                outputDesc: "Код, файлы, изображения, ссылки и другие результаты",
+                messageName: "Уведомление",
+                messageDesc: "Короткие уведомления, оповещения о статусе для быстрой коммуникации",
+                approvalName: "Процесс Утверждения",
+                approvalDesc: "Отчеты о расходах, запросы на отпуск, контракты с многоуровневым утверждением",
+                scheduleName: "Управление Расписанием",
+                scheduleDesc: "Организация встреч, события календаря, напоминания о времени",
+                metricName: "Данные Метрик",
+                metricDesc: "Количественные метрики, статистика, данные мониторинга производительности",
+                valueTitle: "Основные Ценности 💎",
+                value1Title: "Устранение Разрозненности Данных",
+                value1Desc: "Единые форматы для задач, отчетов, утверждений обеспечивают бесшовное взаимодействие OA, ERP, ИИ инструментов",
+                value2Title: "AI-Нативный Дизайн",
+                value2Desc: "От структур данных до паттернов взаимодействия, полностью адаптирован для сценариев на базе ИИ",
+                value3Title: "Встроенная Безопасность",
+                value3Desc: "Проверка подписи, изоляция данных, обязательный HTTPS - безопасность корпоративного уровня",
+                value4Title: "Легкая Интеграция",
+                value4Desc: "RESTful API + Webhook, многоязычный SDK, минимальные затраты на разработку",
+                viewSpec: "Посмотреть Спецификацию Протокола",
+                footerTitle: "SACP - Структурированный Протокол AI Сотрудничества",
+                version: "Версия: v1.0 | Релиз: 2026-02-20",
+                author: 'Автор: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "Лицензия: CC BY 4.0 | Свободно делиться и адаптировать с указанием авторства",
+                footerTagline: "🌟 Делаем вывод ИИ упорядоченным, системы связанными бесшовно"
+            },
+            es: {
+                title: "SACP",
+                subtitle: "Protocolo Estructurado de Colaboración IA",
+                tagline: "Modelos de datos estandarizados para la colaboración trans-sistema impulsada por IA<br>Haciendo la salida de IA ordenada, conectando sistemas sin problemas 🚀",
+                aiSystem: "Sistema IA",
+                oaSystem: "Sistema OA",
+                erpSystem: "Sistema ERP",
+                structuresTitle: "7 Estructuras de Datos Principales ✨",
+                taskName: "Ejecución de Tareas",
+                taskDesc: "Tareas, pendientes, trabajo de desarrollo con prioridad y seguimiento de estado",
+                reportName: "Informe de Documento",
+                reportDesc: "Informes de análisis, propuestas, documentación en formato Markdown",
+                outputName: "Entrega de Salida",
+                outputDesc: "Código, archivos, imágenes, enlaces y otros entregables",
+                messageName: "Mensaje de Notificación",
+                messageDesc: "Notificaciones cortas, alertas de estado para comunicación rápida",
+                approvalName: "Proceso de Aprobación",
+                approvalDesc: "Reportes de gastos, solicitudes de permiso, contratos con aprobación multinivel",
+                scheduleName: "Gestión de Horarios",
+                scheduleDesc: "Organización de reuniones, eventos de calendario, recordatorios de tiempo",
+                metricName: "Datos de Métricas",
+                metricDesc: "Métricas cuantitativas, estadísticas, datos de monitoreo de rendimiento",
+                valueTitle: "Valores Principales 💎",
+                value1Title: "Romper Silos de Datos",
+                value1Desc: "Formatos unificados para tareas, informes, aprobaciones permiten colaboración sin problemas OA, ERP, herramientas IA",
+                value2Title: "Diseño IA-Nativo",
+                value2Desc: "De estructuras de datos a patrones de interacción, completamente adaptado para escenarios impulsados por IA",
+                value3Title: "Seguridad Incorporada",
+                value3Desc: "Verificación de firma, aislamiento de datos, HTTPS obligatorio - seguridad de nivel empresarial",
+                value4Title: "Integración Fácil",
+                value4Desc: "API RESTful + Webhook, SDK multiidioma, costo mínimo de desarrollo",
+                viewSpec: "Ver Especificación del Protocolo",
+                footerTitle: "SACP - Protocolo Estructurado de Colaboración IA",
+                version: "Versión: v1.0 | Lanzamiento: 2026-02-20",
+                author: 'Autor: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "Licencia: CC BY 4.0 | Libre para compartir y adaptar con atribución",
+                footerTagline: "🌟 Haciendo la salida de IA ordenada, conectando sistemas sin problemas"
+            },
+            pt: {
+                title: "SACP",
+                subtitle: "Protocolo Estruturado de Colaboração IA",
+                tagline: "Modelos de dados padronizados para colaboração entre sistemas impulsionada por IA<br>Tornando a saída de IA ordenada, conectando sistemas perfeitamente 🚀",
+                aiSystem: "Sistema IA",
+                oaSystem: "Sistema OA",
+                erpSystem: "Sistema ERP",
+                structuresTitle: "7 Estruturas de Dados Principais ✨",
+                taskName: "Execução de Tarefas",
+                taskDesc: "Tarefas, afazeres, trabalho de desenvolvimento com prioridade e rastreamento de status",
+                reportName: "Relatório de Documento",
+                reportDesc: "Relatórios de análise, propostas, documentação em formato Markdown",
+                outputName: "Entrega de Saída",
+                outputDesc: "Código, arquivos, imagens, links e outros entregáveis",
+                messageName: "Mensagem de Notificação",
+                messageDesc: "Notificações curtas, alertas de status para comunicação rápida",
+                approvalName: "Processo de Aprovação",
+                approvalDesc: "Relatórios de despesas, solicitações de licença, contratos com aprovação multinível",
+                scheduleName: "Gestão de Agenda",
+                scheduleDesc: "Organização de reuniões, eventos de calendário, lembretes de tempo",
+                metricName: "Dados de Métricas",
+                metricDesc: "Métricas quantitativas, estatísticas, dados de monitoramento de desempenho",
+                valueTitle: "Valores Principais 💎",
+                value1Title: "Quebrar Silos de Dados",
+                value1Desc: "Formatos unificados para tarefas, relatórios, aprovações permitem colaboração perfeita OA, ERP, ferramentas IA",
+                value2Title: "Design IA-Nativo",
+                value2Desc: "De estruturas de dados a padrões de interação, completamente adaptado para cenários impulsionados por IA",
+                value3Title: "Segurança Incorporada",
+                value3Desc: "Verificação de assinatura, isolamento de dados, HTTPS obrigatório - segurança de nível empresarial",
+                value4Title: "Integração Fácil",
+                value4Desc: "API RESTful + Webhook, SDK multilíngue, custo mínimo de desenvolvimento",
+                viewSpec: "Ver Especificação do Protocolo",
+                footerTitle: "SACP - Protocolo Estruturado de Colaboração IA",
+                version: "Versão: v1.0 | Lançamento: 2026-02-20",
+                author: 'Autor: 山野小娃 | Email: <a href="mailto:douyacenter@163.com">douyacenter@163.com</a>',
+                license: "Licença: CC BY 4.0 | Livre para compartilhar e adaptar com atribuição",
+                footerTagline: "🌟 Tornando a saída de IA ordenada, conectando sistemas perfeitamente"
+            }
+        };
+
+        // Language switching
+        const languageSelect = document.getElementById('languageSelect');
+
+        languageSelect.addEventListener('change', function() {
+            const lang = this.value;
+            updateLanguage(lang);
+        });
+
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+
+            // Save preference
+            localStorage.setItem('sacp-language', lang);
+        }
+
+        // Load saved language preference
+        const savedLang = localStorage.getItem('sacp-language') || 'en';
+        languageSelect.value = savedLang;
+        updateLanguage(savedLang);
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+                // Random colors
+                const colors = ['#FF6B35', '#00D9FF', '#FF4D9C', '#7CFF6B', '#FFD93D'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.width = (Math.random() * 10 + 5) + 'px';
+                particle.style.height = particle.style.width;
+
+                container.appendChild(particle);
+            }
+        }
+
+        // Initialize particles on page load
+        window.addEventListener('load', createParticles);
+
+        // Add scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.structure-card, .value-card').forEach(card => {
+            card.style.animationPlayState = 'paused';
+            observer.observe(card);
+        });
+
+        // Smooth scroll for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

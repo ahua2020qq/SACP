@@ -1,0 +1,17 @@
+{
+  "type": "approval",
+  "title": "差旅报销申请",
+  "create_time": "2026-02-20 09:00:00",
+  "update_time": "2026-02-20 09:30:00",
+  "creator": "system",
+  "source": "企业OA",
+  "apply_type": "报销",
+  "applicant": "user123",
+  "approver_list": ["manager01", "finance01"],
+  "current_approver": "manager01",
+  "status": "approving",
+  "content": "北京出差往返机票和住宿费用",
+  "amount": 3500.00,
+  "start_time": "2026-02-15 00:00:00",
+  "end_time": "2026-02-17 23:59:59"
+}

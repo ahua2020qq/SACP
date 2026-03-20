@@ -1,0 +1,14 @@
+{
+  "type": "output",
+  "title": "用户认证代码",
+  "create_time": "2026-02-20 16:00:00",
+  "update_time": "2026-02-20 16:00:00",
+  "creator": "ai-assistant",
+  "source": "OpenClaw",
+  "category": "code",
+  "content": "import jwt\n\ndef generate_token(user_id):\n    payload = {'user_id': user_id}\n    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')\n    return token",
+  "language": "python",
+  "url": null,
+  "file_size": null,
+  "from_task": "task-002"
+}

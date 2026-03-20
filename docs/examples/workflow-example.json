@@ -1,0 +1,91 @@
+{
+  "type": "workflow",
+  "title": "差旅报销流程",
+  "create_time": "2026-03-20 14:00:00",
+  "update_time": "2026-03-20 14:00:00",
+  "creator": "user_12345",
+  "source": "AI助手",
+  "steps": [
+    {
+      "id": "step1",
+      "type": "task",
+      "title": "收集差旅发票",
+      "config": {
+        "description": "收集本次差旅的所有发票和凭证",
+        "priority": "高",
+        "status": "todo",
+        "progress": 0,
+        "output_expect": "发票扫描件和费用明细表"
+      },
+      "timeout": 86400
+    },
+    {
+      "id": "step2",
+      "type": "report",
+      "title": "生成报销报告",
+      "depends_on": ["step1"],
+      "trigger": "step1.status == 'done'",
+      "config": {
+        "tags": ["报销", "差旅"],
+        "summary": "2026年3月北京出差费用报销",
+        "content": "# 差旅费用报销\n\n## 费用明细\n- 交通费：¥2,500\n- 住宿费：¥1,800\n- 餐费：¥600\n\n**总计：¥4,900**"
+      },
+      "timeout": 3600
+    },
+    {
+      "id": "step3",
+      "type": "approval",
+      "title": "主管审批",
+      "depends_on": ["step2"],
+      "trigger": "step2.created != null",
+      "config": {
+        "apply_type": "报销",
+        "applicant": "user_12345",
+        "approver_list": ["manager_001", "finance_001"],
+        "approval_data": {
+          "amount": 4900,
+          "category": "差旅费",
+          "description": "北京出差3天"
+        },
+        "current_step": 0,
+        "status": "pending"
+      },
+      "timeout": 86400,
+      "retry_policy": {
+        "max_retries": 0
+      }
+    },
+    {
+      "id": "step4",
+      "type": "schedule",
+      "title": "财务打款",
+      "depends_on": ["step3"],
+      "trigger": "step3.status == 'approved'",
+      "config": {
+        "start_time": "2026-03-21 10:00:00",
+        "end_time": "2026-03-21 10:30:00",
+        "location": "财务系统",
+        "participants": ["finance_001"],
+        "reminder_type": "email",
+        "reminder_time": "1hour"
+      },
+      "timeout": 3600
+    },
+    {
+      "id": "step5",
+      "type": "message",
+      "title": "通知申请人",
+      "depends_on": ["step4"],
+      "trigger": "step4.status == 'done'",
+      "config": {
+        "text": "您的差旅报销已批准，款项将在1-2个工作日打入您的工资卡"
+      }
+    }
+  ],
+  "status": "pending",
+  "extend": {
+    "company": "某科技公司",
+    "department": "研发部",
+    "workflow_template_id": "expense_travel_001"
+  }
+}

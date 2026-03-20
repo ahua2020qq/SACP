@@ -1,0 +1,41 @@
+{
+  "type": "metric",
+  "title": "2026年2月运营数据统计",
+  "create_time": "2026-02-21 08:00:00",
+  "update_time": "2026-02-21 08:00:00",
+  "creator": "system",
+  "source": "BI数据分析系统",
+  "stat_cycle": "2026-02",
+  "data_source": "ERP系统",
+  "metric_list": [
+    {
+      "name": "总任务数",
+      "value": 1250,
+      "unit": "个"
+    },
+    {
+      "name": "任务完成率",
+      "value": 87.5,
+      "unit": "%"
+    },
+    {
+      "name": "AI协同任务占比",
+      "value": 42.3,
+      "unit": "%"
+    },
+    {
+      "name": "平均响应时间",
+      "value": 2.5,
+      "unit": "小时"
+    },
+    {
+      "name": "系统调用次数",
+      "value": 15800,
+      "unit": "次"
+    }
+  ],
+  "extend": {
+    "department": "研发部",
+    "team": "AI平台组"
+  }
+}

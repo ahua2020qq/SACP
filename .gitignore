@@ -1,0 +1,26 @@
+# 无关文件
+DeepSeek反馈.txt
+SACP V1.0 .txt
+SACP to GitHub：.txt
+.claude/
+
+# 编辑器和IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.log
+*.cache
+
+# Node.js (如果将来使用)
+node_modules/
+npm-debug.log
+yarn-error.log

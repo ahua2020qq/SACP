@@ -1,0 +1,19 @@
+{
+  "type": "report",
+  "title": "SACP协议设计文档",
+  "create_time": "2026-02-20 10:00:00",
+  "update_time": "2026-02-20 15:30:00",
+  "creator": "jorneyruan",
+  "source": "OpenClaw",
+  "tags": ["协议设计", "AI协同", "标准化"],
+  "outline": [
+    "协议概述",
+    "核心设计原则",
+    "数据模型规范",
+    "交互规范",
+    "安全规范"
+  ],
+  "summary": "本文档详细描述了SACP协议的设计理念与实现规范",
+  "content": "# SACP协议设计文档\n\n## 1. 协议概述\nSACP（Structured AI Collaboration Protocol）是一套开放、可扩展、标准化的AI原生协同技术协议...",
+  "from_task": "task-001"
+}
