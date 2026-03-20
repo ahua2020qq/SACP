@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACP Protocol Specification - 结构化AI协同协议</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --code-bg: #f1f5f9;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header-logo span {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .language-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .back-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+        }
+
+        .toc h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Content */
+        .content {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content section:last-child {
+            border-bottom: none;
+        }
+
+        .content h3 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--text);
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--code-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        /* Inline Code */
+        code:not(.code-block code) {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        td {
+            color: var(--text-muted);
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Note Box */
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .note p {
+            margin: 0;
+            color: #92400e;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            background: var(--bg-secondary);
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-logo h1 {
+                font-size: 1.25rem;
+            }
+
+            .header-logo span {
+                display: none;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .hero-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logo">
+            <h1>SACP</h1>
+            <span>Structured AI Collaboration Protocol</span>
+        </div>
+        <div class="header-actions">
+            <select class="language-select" id="languageSelect">
+                <option value="en">🇬🇧 English</option>
+                <option value="zh">🇨🇳 中文</option>
+            </select>
+            <button class="back-btn" onclick="window.close()">← Back</button>
+        </div>
+    </header>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h2 id="heroTitle">SACP V1.0 Protocol Specification</h2>
+            <p id="heroDesc">An open, extensible, standardized AI-native collaboration protocol for cross-system data interoperability</p>
+            <div class="hero-meta">
+                <span>📅 Version: v1.0</span>
+                <span>📅 Release: 2026-02-20</span>
+                <span>👤 Author: 山野小娃</span>
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <nav class="toc">
+            <h3 id="tocTitle">Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">1. Protocol Overview</a></li>
+                <li><a href="#principles">2. Core Design Principles</a></li>
+                <li><a href="#data-models">3. Core Data Models</a></li>
+                <li><a href="#common-fields">4. Common Field Specifications</a></li>
+                <li><a href="#structures">5. Seven Core Structures</a></li>
+                <li><a href="#interaction">6. Interaction Modes</a></li>
+                <li><a href="#security">7. Security Specifications</a></li>
+                <li><a href="#license">8. License & Usage</a></li>
+            </ul>
+        </nav>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Section 1: Overview -->
+            <section id="overview">
+                <h3 id="overviewTitle">1. Protocol Overview</h3>
+                <p id="overviewDesc">SACP (Structured AI Collaboration Protocol) is an open, extensible, standardized AI-native technical protocol that defines structured data models, interaction specifications, and security guidelines for AI-driven cross-system collaboration. Any software (traditional office software, AI tools, business systems, developer tools) that follows this protocol can achieve seamless AI collaboration, data interoperability, and unified result accumulation.</p>
+
+                <h4 id="objectivesTitle">1.1 Protocol Objectives</h4>
+                <ul>
+                    <li id="obj1">Solve the industry pain points of disordered AI output, inconsistent formats, and inability to interoperate across systems</li>
+                    <li id="obj2">Provide a ready-to-use standardized AI collaboration solution for all software, reducing AI collaboration development and integration costs</li>
+                    <li id="obj3">Build an open AI collaboration ecosystem to achieve "standardize once, collaborate everywhere"</li>
+                </ul>
+
+                <h4 id="scopeTitle">1.2 Scope of Application</h4>
+                <ul>
+                    <li id="scope1">Traditional software: OA systems, financial reimbursement, travel management, ERP, CRM, knowledge bases</li>
+                    <li id="scope2">AI-native tools: LLM applications, AI execution tools, AI knowledge bases, BI data analysis tools</li>
+                    <li id="scope3">Developer tools: code hosting, CI/CD, project management tools</li>
+                    <li id="scope4">Personal productivity tools: todo lists, calendars, note-taking software</li>
+                </ul>
+            </section>
+
+            <!-- Section 2: Design Principles -->
+            <section id="principles">
+                <h3 id="principlesTitle">2. Core Design Principles</h3>
+                <ol>
+                    <li id="princ1"><strong>Strong Core Constraints, Weak Extension Invasion:</strong> Core data models are strictly standardized to ensure interoperability; extension fields are completely open to adapt personalized needs without breaking core structures.</li>
+                    <li id="princ2"><strong>Security Native:</strong> The protocol natively defines data security, permission isolation, and encrypted transmission guidelines to fundamentally avoid AI collaboration security risks.</li>
+                    <li id="princ3"><strong>100% Backward Compatible:</strong> All protocol iterations maintain complete backward compatibility of core data models; existing integrators require no code changes to adapt to new versions.</li>
+                    <li id="princ4"><strong>Minimal Integration:</strong> The protocol provides standardized API interfaces and multi-language SDKs. Integrators only need to complete data format conversion to achieve protocol adaptation with minimum development cost.</li>
+                </ol>
+            </section>
+
+            <!-- Section 3: Common Fields -->
+            <section id="common-fields">
+                <h3 id="commonFieldsTitle">3. Common Field Specifications</h3>
+                <p>All 7 data structures include the following common fields:</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>type</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Data type: <code>task</code>/<code>report</code>/<code>output</code>/<code>message</code>/<code>approval</code>/<code>schedule</code>/<code>metric</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Title, max 100 characters</td>
+                            </tr>
+                            <tr>
+                                <td><code>create_time</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Creation time in ISO 8601 format: <code>yyyy-MM-dd HH:mm:ss</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>update_time</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Update time in ISO 8601 format</td>
+                            </tr>
+                            <tr>
+                                <td><code>creator</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Creator ID/identifier</td>
+                            </tr>
+                            <tr>
+                                <td><code>source</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Data source system identifier (e.g., <code>OpenClaw</code>, <code>Enterprise OA</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>extend</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Standardized extension field for personalized needs without breaking core structure</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 4: Seven Core Structures -->
+            <section id="structures">
+                <h3 id="structuresTitle">4. Seven Core Data Structures</h3>
+
+                <h4>4.1 <code>task</code> - Task Execution</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents tasks to be executed, todo items, development tasks, etc.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Detailed task description</td>
+                            </tr>
+                            <tr>
+                                <td><code>priority</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Priority: <code>高</code>/<code>中</code>/<code>低</code> (High/Medium/Low)</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Status: <code>todo</code>/<code>doing</code>/<code>confirm</code>/<code>done</code>/<code>archived</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>progress</code></td>
+                                <td>integer</td>
+                                <td>Yes</td>
+                                <td>Progress percentage, 0-100</td>
+                            </tr>
+                            <tr>
+                                <td><code>from_command</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Original command that generated this task</td>
+                            </tr>
+                            <tr>
+                                <td><code>output_expect</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Expected output or deliverable description</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.2 <code>report</code> - Document Report</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents analysis reports, proposal documents, summaries, knowledge accumulation, etc.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>tags</code></td>
+                                <td>array[string]</td>
+                                <td>No</td>
+                                <td>List of tags</td>
+                            </tr>
+                            <tr>
+                                <td><code>outline</code></td>
+                                <td>array[string]</td>
+                                <td>No</td>
+                                <td>Outline (chapter title list)</td>
+                            </tr>
+                            <tr>
+                                <td><code>summary</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Summary/Introduction</td>
+                            </tr>
+                            <tr>
+                                <td><code>content</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Complete content in Markdown format</td>
+                            </tr>
+                            <tr>
+                                <td><code>from_task</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Associated task ID (if generated from a task)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.3 <code>output</code> - Output Delivery</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents deliverables such as code, files, images, links, etc.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>category</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Category: <code>code</code>/<code>file</code>/<code>image</code>/<code>link</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>content</code></td>
+                                <td>string</td>
+                                <td>Conditional</td>
+                                <td>When <code>category</code> is <code>code</code> or <code>link</code>, stores code text or URL; otherwise can be empty</td>
+                            </tr>
+                            <tr>
+                                <td><code>language</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Code language (recommended when <code>category=code</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>url</code></td>
+                                <td>string</td>
+                                <td>Conditional</td>
+                                <td>When <code>category</code> is <code>file</code>/<code>image</code>, file access URL; when <code>category=link</code>, link address</td>
+                            </tr>
+                            <tr>
+                                <td><code>file_size</code></td>
+                                <td>integer</td>
+                                <td>No</td>
+                                <td>File size (bytes), only valid for <code>file</code>/<code>image</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>from_task</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Associated task ID</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.4 <code>message</code> - Notification Message</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Used for short notifications, status reminders, etc., not carrying core business data.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>text</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Notification content, max 2 lines (recommended within 140 characters)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.5 <code>approval</code> - Approval Process</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents various approval applications (reimbursement, leave, contract, etc.).</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>apply_type</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Application type, e.g., <code>报销</code>/<code>请假</code>/<code>合同</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>applicant</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Applicant ID</td>
+                            </tr>
+                            <tr>
+                                <td><code>approver_list</code></td>
+                                <td>array[string]</td>
+                                <td>Yes</td>
+                                <td>Approver ID list (in order)</td>
+                            </tr>
+                            <tr>
+                                <td><code>approval_data</code></td>
+                                <td>object</td>
+                                <td>Yes</td>
+                                <td>Approval business data (specific content varies by <code>apply_type</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>current_step</code></td>
+                                <td>integer</td>
+                                <td>Yes</td>
+                                <td>Current approval step (starting from 0)</td>
+                            </tr>
+                            <tr>
+                                <td><code>status</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Status: <code>pending</code>/<code>approved</code>/<code>rejected</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.6 <code>schedule</code> - Schedule Management</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents meeting arrangements, schedule plans, time reminders, etc.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>start_time</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Start time in ISO 8601 format</td>
+                            </tr>
+                            <tr>
+                                <td><code>end_time</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>End time in ISO 8601 format</td>
+                            </tr>
+                            <tr>
+                                <td><code>location</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Location (physical address or online link)</td>
+                            </tr>
+                            <tr>
+                                <td><code>participants</code></td>
+                                <td>array[string]</td>
+                                <td>Yes</td>
+                                <td>Participant ID list</td>
+                            </tr>
+                            <tr>
+                                <td><code>reminder_type</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Reminder type: <code>none</code>/<code>email</code>/<code>sms</code>/<code>push</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>reminder_time</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Reminder advance time (e.g., <code>15min</code>, <code>1hour</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>4.7 <code>metric</code> - Metric Data</h4>
+                <div class="note">
+                    <p><strong>Core Positioning:</strong> Represents quantitative metrics, statistical data, performance monitoring, etc.</p>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>metric_name</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Metric name</td>
+                            </tr>
+                            <tr>
+                                <td><code>metric_value</code></td>
+                                <td>number</td>
+                                <td>Yes</td>
+                                <td>Metric value</td>
+                            </tr>
+                            <tr>
+                                <td><code>unit</code></td>
+                                <td>string</td>
+                                <td>No</td>
+                                <td>Unit (e.g., <code>%</code>, <code>ms</code>, <code>count</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>timestamp</code></td>
+                                <td>string</td>
+                                <td>Yes</td>
+                                <td>Data timestamp in ISO 8601 format</td>
+                            </tr>
+                            <tr>
+                                <td><code>dimensions</code></td>
+                                <td>object</td>
+                                <td>No</td>
+                                <td>Dimension information (e.g., <code>{"region": "CN", "env": "prod"}</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 5: Interaction Modes -->
+            <section id="interaction">
+                <h3 id="interactionTitle">5. Interaction Modes</h3>
+                <p id="interactionDesc">SACP supports two interaction modes:</p>
+
+                <h4 id="apiTitle">5.1 RESTful API (Active Invocation)</h4>
+                <p>System A actively calls System B's API to push SACP data:</p>
+                <div class="code-block">
+                    <code>POST https://system-b.com/api/sacp/receive</code>
+                </div>
+
+                <h4 id="webhookTitle">5.2 Webhook (Event Push)</h4>
+                <p>System B registers a webhook URL with System A. When System A generates SACP data, it actively pushes to System B:</p>
+                <div class="code-block">
+                    <code>POST https://system-b.com/webhook/sacp</code>
+                </div>
+            </section>
+
+            <!-- Section 6: Security -->
+            <section id="security">
+                <h3 id="securityTitle">6. Security Specifications</h3>
+                <ol>
+                    <li id="sec1"><strong>Signature Verification:</strong> All SACP data transfers must include signature verification to prevent data tampering.</li>
+                    <li id="sec2"><strong>HTTPS Mandatory:</strong> All API calls must use HTTPS protocol to ensure transmission security.</li>
+                    <li id="sec3"><strong>Data Isolation:</strong> Different tenants/organizations' data must be strictly isolated.</li>
+                    <li id="sec4"><strong>Permission Minimization:</strong> Follow the principle of least privilege for API access control.</li>
+                    <li id="sec5"><strong>Rate Limiting:</strong> Implement reasonable rate limiting to prevent abuse.</li>
+                </ol>
+            </section>
+
+            <!-- Section 7: License -->
+            <section id="license">
+                <h3 id="licenseTitle">7. License & Usage</h3>
+                <p id="licenseDesc">SACP protocol specification is licensed under CC BY 4.0. You are free to share, modify, and use this specification, provided you retain attribution to the original author.</p>
+                <p><strong>Author:</strong> 山野小娃</p>
+                <p><strong>Email:</strong> <a href="mailto:douyacenter@163.com">douyacenter@163.com</a></p>
+                <p><strong>Copyright:</strong> Copyright (c) 2026 山野小娃</p>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>SACP - Structured AI Collaboration Protocol</p>
+        <p>Version v1.0 | Released 2026-02-20</p>
+        <p>Licensed under CC BY 4.0 | Free to share and adapt with attribution</p>
+    </footer>
+
+    <script>
+        // Translations
+        const translations = {
+            en: {
+                heroTitle: "SACP V1.0 Protocol Specification",
+                heroDesc: "An open, extensible, standardized AI-native collaboration protocol for cross-system data interoperability",
+                tocTitle: "Table of Contents",
+                overviewTitle: "1. Protocol Overview",
+                overviewDesc: "SACP (Structured AI Collaboration Protocol) is an open, extensible, standardized AI-native technical protocol that defines structured data models, interaction specifications, and security guidelines for AI-driven cross-system collaboration. Any software (traditional office software, AI tools, business systems, developer tools) that follows this protocol can achieve seamless AI collaboration, data interoperability, and unified result accumulation.",
+                objectivesTitle: "1.1 Protocol Objectives",
+                obj1: "Solve the industry pain points of disordered AI output, inconsistent formats, and inability to interoperate across systems",
+                obj2: "Provide a ready-to-use standardized AI collaboration solution for all software, reducing AI collaboration development and integration costs",
+                obj3: "Build an open AI collaboration ecosystem to achieve 'standardize once, collaborate everywhere'",
+                scopeTitle: "1.2 Scope of Application",
+                scope1: "Traditional software: OA systems, financial reimbursement, travel management, ERP, CRM, knowledge bases",
+                scope2: "AI-native tools: LLM applications, AI execution tools, AI knowledge bases, BI data analysis tools",
+                scope3: "Developer tools: code hosting, CI/CD, project management tools",
+                scope4: "Personal productivity tools: todo lists, calendars, note-taking software",
+                principlesTitle: "2. Core Design Principles",
+                princ1: "Strong Core Constraints, Weak Extension Invasion: Core data models are strictly standardized to ensure interoperability; extension fields are completely open to adapt personalized needs without breaking core structures.",
+                princ2: "Security Native: The protocol natively defines data security, permission isolation, and encrypted transmission guidelines to fundamentally avoid AI collaboration security risks.",
+                princ3: "100% Backward Compatible: All protocol iterations maintain complete backward compatibility of core data models; existing integrators require no code changes to adapt to new versions.",
+                princ4: "Minimal Integration: The protocol provides standardized API interfaces and multi-language SDKs. Integrators only need to complete data format conversion to achieve protocol adaptation with minimum development cost.",
+                commonFieldsTitle: "3. Common Field Specifications",
+                structuresTitle: "4. Seven Core Data Structures",
+                interactionTitle: "5. Interaction Modes",
+                interactionDesc: "SACP supports two interaction modes:",
+                apiTitle: "5.1 RESTful API (Active Invocation)",
+                webhookTitle: "5.2 Webhook (Event Push)",
+                securityTitle: "6. Security Specifications",
+                sec1: "Signature Verification: All SACP data transfers must include signature verification to prevent data tampering.",
+                sec2: "HTTPS Mandatory: All API calls must use HTTPS protocol to ensure transmission security.",
+                sec3: "Data Isolation: Different tenants/organizations' data must be strictly isolated.",
+                sec4: "Permission Minimization: Follow the principle of least privilege for API access control.",
+                sec5: "Rate Limiting: Implement reasonable rate limiting to prevent abuse.",
+                licenseTitle: "7. License & Usage",
+                licenseDesc: "SACP protocol specification is licensed under CC BY 4.0. You are free to share, modify, and use this specification, provided you retain attribution to the original author."
+            },
+            zh: {
+                heroTitle: "SACP V1.0 协议规范",
+                heroDesc: "一个开放、可扩展、标准化的AI原生协同协议，用于跨系统数据互通",
+                tocTitle: "目录",
+                overviewTitle: "1. 协议概述",
+                overviewDesc: "SACP（结构化AI协同协议）是一套开放、可扩展、标准化的AI原生技术协议，定义了AI驱动场景下跨系统、跨软件的结构化数据模型、交互规范与安全准则。任何软件（传统办公软件、AI工具、业务系统、开发者工具）只要遵循本协议，即可实现无缝的AI协同、数据互通、执行结果统一沉淀，彻底打破AI时代的系统数据孤岛。",
+                objectivesTitle: "1.1 协议目标",
+                obj1: "解决AI输出无序、格式不统一、跨系统无法互通的行业痛点",
+                obj2: "为所有软件提供一套开箱即用的AI协同标准化方案，降低AI协同的开发与接入成本",
+                obj3: "构建开放的AI协同生态，实现「一次标准化，全场景协同」",
+                scopeTitle: "1.2 适用范围",
+                scope1: "传统软件：OA系统、财务报销、差旅管理、ERP、CRM、知识库",
+                scope2: "AI原生工具：大模型应用、AI执行工具、AI知识库、BI数据分析工具",
+                scope3: "开发者工具：代码托管、CI/CD、项目管理工具",
+                scope4: "个人生产力工具：待办清单、日历、笔记软件",
+                principlesTitle: "2. 核心设计原则",
+                princ1: "强约束核心，弱侵入扩展：核心数据模型严格标准化，保证互通性；扩展字段完全开放，适配不同场景的个性化需求，不破坏核心结构。",
+                princ2: "安全原生：协议原生定义数据安全、权限隔离、加密传输准则，从根源规避AI协同的安全风险。",
+                princ3: "100%向下兼容：协议所有版本迭代，核心数据模型完全向下兼容，老接入方无需修改代码即可适配新版本。",
+                princ4: "极简接入：协议提供标准化的API接口、多语言SDK，接入方仅需完成数据格式转换，即可实现协议适配，最低开发成本。",
+                commonFieldsTitle: "3. 通用字段规范",
+                structuresTitle: "4. 七种核心数据结构",
+                interactionTitle: "5. 交互模式",
+                interactionDesc: "SACP支持两种交互模式：",
+                apiTitle: "5.1 RESTful API（主动调用）",
+                webhookTitle: "5.2 Webhook（事件推送）",
+                securityTitle: "6. 安全规范",
+                sec1: "签名校验：所有SACP数据传输必须包含签名校验，防止数据被篡改。",
+                sec2: "HTTPS强制：所有API调用必须使用HTTPS协议，确保传输安全。",
+                sec3: "数据隔离：不同租户/组织的数据必须严格隔离。",
+                sec4: "权限最小化：遵循最小权限原则进行API访问控制。",
+                sec5: "速率限制：实施合理的速率限制，防止滥用。",
+                licenseTitle: "7. 开源协议",
+                licenseDesc: "SACP协议规范采用 CC BY 4.0 协议。您可以自由地分享、修改和使用本规范，但必须保留原作者署名。"
+            }
+        };
+
+        // Language switching
+        const languageSelect = document.getElementById('languageSelect');
+
+        languageSelect.addEventListener('change', function() {
+            const lang = this.value;
+            updateLanguage(lang);
+        });
+
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[id]');
+            elements.forEach(element => {
+                const key = element.id;
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+
+            // Save preference
+            localStorage.setItem('sacp-spec-language', lang);
+        }
+
+        // Load saved language preference
+        const savedLang = localStorage.getItem('sacp-spec-language') || 'en';
+        languageSelect.value = savedLang;
+        updateLanguage(savedLang);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

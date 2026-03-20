@@ -1,0 +1,24 @@
+{
+  "type": "schedule",
+  "title": "SACP协议评审会议",
+  "create_time": "2026-02-21 09:00:00",
+  "update_time": "2026-02-21 09:00:00",
+  "creator": "jorneyruan",
+  "source": "企业OA",
+  "description": "讨论SACP V1.0协议的技术细节和实施计划",
+  "start_time": "2026-02-25 14:00:00",
+  "end_time": "2026-02-25 15:30:00",
+  "status": "scheduled",
+  "priority": "高",
+  "remind_time": "2026-02-25 13:50:00",
+  "cycle_rule": null,
+  "participant_list": [
+    "jorneyruan",
+    "alice",
+    "bob"
+  ],
+  "extend": {
+    "location": "会议室A",
+    "meeting_link": "https://meeting.example.com/sacp-review"
+  }
+}

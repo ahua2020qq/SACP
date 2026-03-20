@@ -1,0 +1,13 @@
+{
+  "type": "message",
+  "title": "任务完成提醒",
+  "create_time": "2026-02-21 10:30:00",
+  "update_time": "2026-02-21 10:30:00",
+  "creator": "system",
+  "source": "OpenClaw",
+  "text": "您创建的任务'完成SACP协议文档'已由AI助手完成，请查看成果。",
+  "extend": {
+    "priority": "normal",
+    "category": "task_notification"
+  }
+}
