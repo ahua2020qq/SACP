@@ -2,7 +2,7 @@
 
 ## 项目发起人与主要维护者 | Project Founder & Maintainer
 
-### 山野小娃 (Jorney Ruan)
+### 山野小娃
 
 **角色 | Role:** 项目发起人、协议主要设计者、核心维护者 | Project Founder, Protocol Designer, Core Maintainer
 
@@ -49,6 +49,6 @@ Thanks to all developers and users who use, provide feedback, and improve the SA
 ---
 
 **版权声明 | Copyright:**
-Copyright (c) 2026 山野小娃 (Jorney Ruan)
+Copyright (c) 2026 山野小娃
 
 本文件采用 CC BY 4.0 协议 | This file is licensed under CC BY 4.0

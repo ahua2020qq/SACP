@@ -1,5 +1,5 @@
 """
-Copyright (c) 2026 山野小娃 (Jorney Ruan)
+Copyright (c) 2026 山野小娃
 
 SACP Python SDK - 简单的SACP协议客户端实现
 Email: ahua2020@qq.com

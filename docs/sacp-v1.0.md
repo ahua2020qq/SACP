@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2026 山野小娃 (Jorney Ruan)
+Copyright (c) 2026 山野小娃
 
 This document is licensed under CC BY 4.0.
 -->
@@ -13,5 +13,5 @@ This document is licensed under CC BY 4.0.
 
 ---
 
-**Copyright (c) 2026 山野小娃 (Jorney Ruan)**
+**Copyright (c) 2026 山野小娃**
 **Licensed under CC BY 4.0**

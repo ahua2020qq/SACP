@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2026 山野小娃 (Jorney Ruan)
+Copyright (c) 2026 山野小娃
 
 This document is licensed under CC BY 4.0. You are free to share and adapt, provided you give appropriate credit.
 -->
@@ -202,6 +202,6 @@ The protocol defines a standardized event push mechanism for real-time data sync
 
 ---
 
-**Author:** 山野小娃 (Jorney Ruan)
-**Copyright:** Copyright (c) 2026 山野小娃 (Jorney Ruan)
+**Author:** 山野小娃
+**Copyright:** Copyright (c) 2026 山野小娃
 **License:** This document is licensed under CC BY 4.0. You are free to share and adapt, provided you give appropriate credit.

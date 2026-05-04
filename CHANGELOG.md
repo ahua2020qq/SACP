@@ -84,5 +84,5 @@ Versioning based on [Semantic Versioning](https://semver.org/lang/zh-CN/).
 ---
 
 **版权声明 | Copyright:**
-Copyright (c) 2026 山野小娃 (Jorney Ruan)
+Copyright (c) 2026 山野小娃
 本文档遵循 CC BY 4.0 协议 | This document follows CC BY 4.0 license

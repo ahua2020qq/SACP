@@ -92,5 +92,5 @@ with open('examples/task.json', 'r') as f:
 
 ---
 
-**Copyright (c) 2026 山野小娃 (Jorney Ruan)**
+**Copyright (c) 2026 山野小娃**
 **Licensed under CC BY 4.0**
